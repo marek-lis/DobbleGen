@@ -1,7 +1,7 @@
 import pytest
 from dobble_generator import Dobble_Generator
 
-symbols_per_card = 4
+symbols_per_card = 8
 
 prime = symbols_per_card - 1
 

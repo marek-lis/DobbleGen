@@ -12,11 +12,13 @@ class Dobble_Generator:
     # image file extension
     __extension = ".png"
     # number of symbols on card (n + 1)
-    __symbolsPerCard = 8
+    __symbols_per_card = 8
     # prime number = __symbolsPerCard - 1
-    __n = __symbolsPerCard - 1
+    __n = __symbols_per_card - 1
+    # square n
+    __n2 = __n ** 2
     # shuffle symbols on card True/False
-    __shuffleSymbolsOnCard = False
+    __shuffle_symbols_on_card = False
     # symbol names
     __names = []
     # symbol ids
@@ -24,20 +26,21 @@ class Dobble_Generator:
     # output cards
     __cards = []
 
-    def __init__(self, symbolsPerCard, shuffleSymbolsOnCard):
+    def __init__(self, symbols_per_card, shuffle_symbols_on_card):
         self.__ids = []
         self.__names = []
         self.__cards = []
-        self.__n = symbolsPerCard - 1
-        self.__symbolsPerCard = symbolsPerCard
-        self.__shuffleSymbolsOnCard = shuffleSymbolsOnCard
-        self.__numberOfCards = self.__calculate_number_of_cards()
-        self.__numberOfSymbols = self.__calculate_number_of_symbols()
+        self.__n = symbols_per_card - 1
+        self.__n2 = self.__n ** 2
+        self.__symbols_per_card = symbols_per_card
+        self.__shuffle_symbols_on_card = shuffle_symbols_on_card
+        self.__number_of_cards = self.__calculate_number_of_cards()
+        self.__number_of_symbols = self.__calculate_number_of_symbols()
 
     def __generate_test_symbols(self):
         self.__ids = []
         self.__names = []
-        for symbol in range(self.__numberOfSymbols):
+        for symbol in range(self.__number_of_symbols):
             self.__ids.append(str(symbol+1))
             self.__names.append("symbol"+str(symbol+1))
 
@@ -49,33 +52,57 @@ class Dobble_Generator:
         # total number of symbols needed to generated maximum number of cards: n^2 + n+ 1 (eg.: 7^2 + 7 + 1 = 57)
         return self.__n**2 + self.__n + 1
 
-    def __calculate_first_n_plus_1_cards(self):
-        # Add first set of n+1 cards (e.g. 8 cards)
-        for i in range(self.__n + 1):
-            # Add new card with first symbol
-            self.__cards.append([1])
-            # Add n+1 symbols on the card (e.g. 8 symbols)
-            for j in range(self.__n):
-                self.__cards[i].append((j+1) + (i*self.__n) + 1)
+    def __generate_header(self):
+        # generate first row: 1 .. symbols count
+        return [col + 1 for col in range(self.__symbols_per_card)]
 
-    def __calculate_n_sets_of_n_cards(self):
-        # Add n sets of n cards
-        for k in range(2, self.__n + 2):
-            for i in range(self.__n):
-                # Append a new card with 1 symbol
-                self.__cards.append([k])
-                # Add n symbols on the card (e.g. 7 symbols)
-                for j in range(0, self.__n):
-                    val = self.__n + 2 + i + (k+1)*j
-                    while val >= self.__n + 2 + (j+1)*self.__n:
-                        val = val - self.__n
-                    self.__cards[len(self.__cards)-1].append(val)
+    def __generate_template(self):
+        # generate template matrix
+        return [col + self.__symbols_per_card + 1 for col in range(self.__n2)]
+
+    def __genereate_first_block(self):
+        # generate the first block of size: n rows x symbols_per_card cols
+        result = []
+        row = 1
+        while row < self.__symbols_per_card:
+            result.append(1)
+            result += [2 + self.__n * row + col for col in range(self.__n)]
+            row += 1
+        return result
+
+    def __generate_second_block(self, template, block_num):
+        # generate the second block of size: n rows x symbols_per_card cols
+        result = []
+        row = 0
+        while row < self.__n:
+            result.append(block_num)
+            result += [template[col * self.__n + row]
+                       for col in range(self.__n)]
+            row += 1
+        return result
+
+    def __generate_next_block(self, template, block_num):
+        # generate block_num block of size: n rows x symbols_per_card cols
+        result = []
+        offset = block_num - 2
+        row = 0
+        while row < self.__n:
+            result.append(block_num)
+            result += [template[(col * self.__n + (row + col * offset) %
+                                 self.__n) % self.__n2] for col in range(self.__n)]
+            row += 1
+        return result
 
     def __shuffle_cards(self):
-        # Shuffle symbols on each card
-        if self.__shuffleSymbolsOnCard:
+        # shuffle symbols on each card
+        if self.__shuffle_symbols_on_card:
             for card in self.__cards:
                 shuffle(card)
+
+    def __split_into_chunks(self, cards):
+        # split cards list into chunks of length n+1
+        return [cards[i:i+self.__symbols_per_card]
+                for i in range(0, len(cards), self.__symbols_per_card)]
 
     def __output_all_cards(self):
         # Output all cards
@@ -92,9 +119,9 @@ class Dobble_Generator:
         output = {
             'base': self.__base,
             'path': self.__path,
-            'numberOfCards': self.__numberOfCards,
-            'numberOfSymbols': self.__numberOfSymbols,
-            'symbolsPerCard': self.__symbolsPerCard,
+            'numberOfCards': self.__number_of_cards,
+            'numberOfSymbols': self.__number_of_symbols,
+            'symbolsPerCard': self.__symbols_per_card,
             'n': self.__n,
             'cards': []
         }
@@ -122,23 +149,22 @@ class Dobble_Generator:
     def generate_cards(self):
         self.__cards = []
         self.__generate_test_symbols()
-        self.__calculate_first_n_plus_1_cards()
-        self.__calculate_n_sets_of_n_cards()
+        template = self.__generate_template()
+        result = self.__generate_header()
+        result += self.__genereate_first_block()
+        result += self.__generate_second_block(template, 2)
+        for i in range(self.__n-1):
+            result += self.__generate_next_block(template, 2 + i + 1)
+        # print(result)
+        self.__cards = self.__split_into_chunks(result)
         self.__shuffle_cards()
+        # print(self.__cards)
         return self.__cards
 
     def print_cards(self):
-        self.__cards = []
-        self.__generate_test_symbols()
-        self.__calculate_first_n_plus_1_cards()
-        self.__calculate_n_sets_of_n_cards()
-        self.__shuffle_cards()
+        self.generate_cards()
         self.__output_all_cards()
 
     def print_json(self):
-        self.__cards = []
-        self.__generate_test_symbols()
-        self.__calculate_first_n_plus_1_cards()
-        self.__calculate_n_sets_of_n_cards()
-        self.__shuffle_cards()
+        self.generate_cards()
         self.__output_json()
