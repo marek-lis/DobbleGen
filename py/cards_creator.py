@@ -41,6 +41,7 @@ class Cards_Creator:
         self.__files = files
         self.__cards = cards
         self.__pdf = FPDF()
+        self.__pdf.set_compression(False)
         # A4 size is 210 x 297 mm
         self.__pw = 210
         self.__ph = 297
