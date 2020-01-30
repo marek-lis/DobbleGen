@@ -37,18 +37,22 @@ class Cards_Creator:
         self.__cardspp = self.__colspp * self.__rowspp
         self.__n = symbols_per_card - 1
         self.__sn = symbols_per_card
-        self.__sw = 25
         self.__files = files
         self.__cards = cards
-        self.__pdf = FPDF()
-        self.__pdf.set_compression(False)
         # A4 size is 210 x 297 mm
         self.__pw = 210
         self.__ph = 297
-        # A4 size can contain 3 rows and 2 columns of cards
+        self.__recalculate()
+        # init pdf generation
+        self.__pdf = FPDF()
+        self.__pdf.set_compression(False)
+
+    def __recalculate(self):
+        # A4 size can contain rows x columns cards
         self.__cw = self.__pw / self.__colspp
         self.__ch = self.__ph / self.__rowspp
         self.__cr = min(self.__cw, self.__ch)
+        self.__sw = self.__cr / 4
         print("Card size: %d x %d." % (self.__cw, self.__ch))
         print("Card radius: %d." % (self.__cr))
 
@@ -98,10 +102,16 @@ class Cards_Creator:
                 print("Generating page %d out of %d." %
                       (page_num, pages_total))
             card = self.__cards[index]
-            col = i % 2
-            row = math.floor(i / 2)
+            col = i % self.__colspp
+            row = math.floor(i / self.__colspp)
             self.__add_card_to_pdf(card, col, row, self.__cr / 3)
             index += 1
+
+    def set_page_format(self, cols, rows):
+        self.__colspp = cols
+        self.__rowspp = rows
+        self.__cardspp = cols * rows
+        self.__recalculate()
 
     def generate(self, file):
         if len(self.__files) >= len(self.__cards):

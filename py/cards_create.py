@@ -19,4 +19,5 @@ file_name = str(now.year)+""+format(now.month, '02d')+""+format(now.day, '02d')+
     "C_"+format(symbols_per_card, '0d')+"S"
 
 cc = Cards_Creator(8, cards, files)
+cc.set_page_format(2, 3)
 cc.generate("./output/" + file_name + ".pdf")
