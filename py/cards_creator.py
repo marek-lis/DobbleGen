@@ -43,8 +43,11 @@ class Cards_Creator:
         self.__pw = 210
         self.__ph = 297
         self.__recalculate()
+
+    def __init_PDF(self):
         # init pdf generation
         self.__pdf = FPDF()
+        self.__pdf.set_margins(left=5, top=5, right=5)
         self.__pdf.set_compression(False)
 
     def __recalculate(self):
@@ -107,6 +110,34 @@ class Cards_Creator:
             self.__add_card_to_pdf(card, col, row, self.__cr / 3)
             index += 1
 
+    def __add_intro_page(self, pdf, files):
+        cols = 5
+        page_top = 50
+        page_left = 15
+        page_width = 200
+        page_height = 270
+        pdf.add_font('Font', '', "C:\Windows\Fonts\Verdana.ttf", uni=True)
+        pdf.add_font('Font', 'B', "C:\Windows\Fonts\Verdana.ttf", uni=True)
+        pdf.add_page()
+        pdf.set_font('Font', 'B', 20)
+        pdf.cell(page_width, 10, "DOBBLE",
+                 border=0, ln=0, align="C")
+        pdf.set_font('Font', '', 14)
+        pdf.text(
+            25, 25, "Oto symbole, jakie możesz napotkać na poszczególnych kartach:")
+        pdf.set_font('Font', 'B', 9)
+        i = 0
+        for file in files:
+            col = i % cols
+            row = math.floor(i / cols)
+            text = file.split(
+                '/')[-1:][0].split('.')[-2:-1][0].replace('_', ' ')
+            print(col, row, text)
+            pdf.image(file, page_left + col * 40,
+                      page_top + row * 20 - 16, h=12)
+            pdf.text(page_left + col * 40, page_top + row * 20, text)
+            i += 1
+
     def set_page_format(self, cols, rows):
         self.__colspp = cols
         self.__rowspp = rows
@@ -117,5 +148,7 @@ class Cards_Creator:
         if len(self.__files) >= len(self.__cards):
             print("Generating PDF file with %d cards, %d cards per A4 page, %d symbols per card." %
                   (len(self.__cards), self.__cardspp, self.__sn))
+            self.__init_PDF()
+            self.__add_intro_page(self.__pdf, self.__files)
             self.__add_pages()
             self.__pdf.output(file)
