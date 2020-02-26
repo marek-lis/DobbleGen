@@ -1,5 +1,7 @@
 from fpdf import FPDF
+from card import Card
 import math
+import os
 
 
 class Cards_Creator:
@@ -110,6 +112,31 @@ class Cards_Creator:
             self.__add_card_to_pdf(card, col, row, self.__cr / 3)
             index += 1
 
+    def __add_external_pages(self, path):
+        # generate all pages
+        index = 0
+        page_num = 0
+        cards_total = len(self.__cards)
+        pages_total = math.ceil(cards_total / self.__cardspp)
+        # iterate thgrough all cards
+        while index < cards_total:
+            i = index % self.__cardspp
+            # generate 6 cards per page
+            if i == 0:
+                page_num += 1
+                self.__pdf.add_page()
+                self.__add_markers()
+                print("Generating page %d out of %d." %
+                      (page_num, pages_total))
+            card = self.__cards[index]
+            col = i % self.__colspp
+            row = math.floor(i / self.__colspp)
+            #self.__add_card_to_pdf(card, col, row, self.__cr / 3)
+            px = col * self.__cw + self.__cw / 2
+            py = row * self.__ch + self.__ch / 2
+            self.__pdf.image(path + format(index, '02d') + ".png", px - self.__cr / 2 + 1, py - self.__cr/2 + 1, self.__cr - 2)
+            index += 1
+
     def __add_intro_page(self, pdf, files):
         cols = 5
         page_top = 50
@@ -144,11 +171,25 @@ class Cards_Creator:
         self.__cardspp = cols * rows
         self.__recalculate()
 
-    def generate(self, file):
+    def generate_cards(self, path):
+        if len(self.__files) >= len(self.__cards):
+            print("Generating %d cards in separate png files, %d symbols per card." %
+                  (len(self.__cards), self.__sn))
+            os.makedirs(path)
+            i = 0
+            for item in self.__cards:
+                print(item)
+                image_urls = [self.__files[num - 1] for num in item]
+                print(image_urls)
+                Card().generate_card(image_urls, path + format(i, '02d') + ".png")
+                i += 1
+
+    def generate_pdf(self, path, file_name):
         if len(self.__files) >= len(self.__cards):
             print("Generating PDF file with %d cards, %d cards per A4 page, %d symbols per card." %
                   (len(self.__cards), self.__cardspp, self.__sn))
             self.__init_PDF()
             self.__add_intro_page(self.__pdf, self.__files)
-            self.__add_pages()
-            self.__pdf.output(file)
+            # self.__add_pages()
+            self.__add_external_pages(path + "cards/")
+            self.__pdf.output(path + file_name + ".pdf")
