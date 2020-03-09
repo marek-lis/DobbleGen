@@ -1,6 +1,7 @@
 import math
 from random import randrange
 from PIL import Image, ImageDraw
+from planner import Planner
 
 
 class Card:
@@ -15,6 +16,42 @@ class Card:
         background.ellipse((0, 0, card.width-1, card.height-1),
                            fill='#FFFFFF', outline='#000000')
         return background
+
+    def __make_icon(self, circle, icon_url, icon_width):
+        icon = Image.open(icon_url)
+        ratio = icon.height / icon.width
+        w = round(icon_width * 2 * circle.r)
+        h = round(w * ratio)
+        icon = icon.resize((w, h), Image.ANTIALIAS)
+        icon = icon.rotate(circle.a, resample=Image.BICUBIC, expand=True)
+        return icon
+
+    def __make_icons(self, card, icons):
+        planned = Planner.get_card_data_1x7(len(icons))
+        print("Creating Cards")
+        # card width, card height
+        (cw, ch) = (card.width, card.height)
+        # card width / 4, card height / 4
+        (cw4, ch4) = (round(cw/4), round(ch/4))
+        # card width / 2, card height / 2
+        (cw2, ch2) = (2*cw4, 2*ch4)
+        items_num = len(planned)
+        for i in range(items_num):
+            icon = icons[i]
+            circle = planned[i]
+            # print(icon)
+            # print(circle)
+            content = self.__make_icon(circle, icon, cw2)
+            # icon width, icon height
+            (iw, ih) = (content.width, content.height)
+            # icon width / 4, icon height / 4
+            (iw4, ih4) = (round(iw/4), round(ih/4))
+            # icon width / 2, icon height / 2
+            (iw2, ih2) = (2*iw4, 2*ih4)
+            px = cw2 + round(circle.x * cw2) - iw2
+            py = ch2 + round(circle.y * ch2) - ih2
+            print(str(px) + " " + str(py))
+            card.paste(content, box=(px, py), mask=content)
 
     def __create_icon(self, icon_url, icon_width):
         icon = Image.open(icon_url)
@@ -68,5 +105,6 @@ class Card:
 
     def generate_card(self, icons, output_file):
         self.__create_background(self.__card)
-        self.__create_icons(self.__card, icons)
+        self.__make_icons(self.__card, icons)
+        # self.__create_icons(self.__card, icons)
         self.__save_card(self.__card, output_file)

@@ -5,7 +5,7 @@ from dobble_generator import Dobble_Generator
 
 symbols_per_card = 8
 
-path_to_symbols = "./lib/medical/"
+path_to_symbols = "lib/geometry/"
 
 files = scan_dir_for_files(path_to_symbols)
 files_num = len(files)
@@ -22,6 +22,6 @@ file_name = str(now.year)+""+format(now.month, '02d')+""+format(now.day, '02d')+
     "C_"+format(symbols_per_card, '0d')+"S"
 
 cc = Cards_Creator(8, cards, files)
-cc.set_page_format(3, 4)
+cc.set_page_format(2, 3)
 cc.generate_cards("./output/" + file_name + "/cards/")
 cc.generate_pdf("./output/" + file_name + "/", file_name)

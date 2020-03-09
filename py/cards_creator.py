@@ -134,7 +134,8 @@ class Cards_Creator:
             #self.__add_card_to_pdf(card, col, row, self.__cr / 3)
             px = col * self.__cw + self.__cw / 2
             py = row * self.__ch + self.__ch / 2
-            self.__pdf.image(path + format(index, '02d') + ".png", px - self.__cr / 2 + 1, py - self.__cr/2 + 1, self.__cr - 2)
+            self.__pdf.image(path + format(index, '02d') + ".png", px -
+                             self.__cr / 2 + 1, py - self.__cr/2 + 1, self.__cr - 2)
             index += 1
 
     def __add_intro_page(self, pdf, files):
