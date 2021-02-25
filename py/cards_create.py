@@ -5,7 +5,7 @@ from dobble_generator import Dobble_Generator
 
 symbols_per_card = 8
 
-path_to_symbols = "lib/geometry/"
+path_to_symbols = "lib/medical/"
 
 files = scan_dir_for_files(path_to_symbols)
 files_num = len(files)
