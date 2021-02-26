@@ -39,6 +39,7 @@ class Planner:
     def get_card_data_1x7(items_num):
         middle = Circle(0, 0, random.uniform(0.20, 0.25),
                         random.randrange(0, 360, 1))
+        print("Icon #0 X: %9f, Y: %9f, Radius: %9f, Rotation: %3d" % (middle.x, middle.y, middle.r, middle.a))
         angle_per_item = 2 * math.pi / (items_num-1)
         radius = random.uniform(0.15, 0.20)
         rotation = random.randrange(0, 360, 1)
@@ -48,8 +49,8 @@ class Planner:
         y = math.cos(angle) * r
         first = Circle(x, y, radius, rotation)
         result = [middle] + [first]
+        print("Icon #1 X: %9f, Y: %9f, Radius: %9f, Rotation: %03d" % (x, y, radius, rotation))
         for i in range(items_num - 2):
-            print(i)
             if i < 8:
                 angle = (i+1) * angle_per_item
                 rotation = random.randrange(0, 360, 1)
@@ -61,7 +62,7 @@ class Planner:
                     p0, [result[0], result[1+i], result[1]])
                 radius -= (r - 0.45)
                 radius = min(radius, 0.25)
-                print(radius)
+                print("Icon #%d X: %9f, Y: %9f, Radius: %9f, Rotation: %03d" % ((i+2), x, y, radius, rotation))
                 c = Circle(x, y, radius, rotation)
                 result.append(c)
         return result

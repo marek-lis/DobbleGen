@@ -27,8 +27,9 @@ class Card:
         return icon
 
     def __make_icons(self, card, icons):
+        print("Planning Card:")
         planned = Planner.get_card_data_1x7(len(icons))
-        print("Creating Cards")
+        print("Creating Card:")
         # card width, card height
         (cw, ch) = (card.width, card.height)
         # card width / 4, card height / 4
@@ -50,7 +51,7 @@ class Card:
             (iw2, ih2) = (2*iw4, 2*ih4)
             px = cw2 + round(circle.x * cw2) - iw2
             py = ch2 + round(circle.y * ch2) - ih2
-            print(str(px) + " " + str(py))
+            print("Icon #%d PX: %d, PY: %d" % (i, px, py))
             card.paste(content, box=(px, py), mask=content)
 
     def __create_icon(self, icon_url, icon_width):
