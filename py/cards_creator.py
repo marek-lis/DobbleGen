@@ -67,51 +67,6 @@ class Cards_Creator:
         self.__pdf.image("./lib/marker.png", self.__pw - 1, self.__ph - 1)
         self.__pdf.image("./lib/marker.png", 0, self.__ph - 1)
 
-    def __add_image_to_card(self, x, y, r, i, file_index):
-        delta_angle = math.pi * 2 / (self.__sn - 1)
-        angle = delta_angle * i
-        if i < 1:
-            px = x - self.__sw / 2
-            py = y - self.__sw / 2
-        else:
-            if i % 2 == 0:
-                delta = -6
-            else:
-                delta = 1
-            px = x + ((r+delta) * math.cos(angle) - self.__sw / 2)
-            py = y + ((r+delta) * math.sin(angle) - self.__sw / 2)
-        self.__pdf.image(self.__files[file_index-1], px, py, self.__sw)
-
-    def __add_card_to_pdf(self, card, col, row, r):
-        for i in range(len(card)):
-            px = col * self.__cw + self.__cw / 2
-            py = row * self.__ch + self.__ch / 2
-            self.__add_image_to_card(px, py, r, i, card[i])
-        self.__pdf.image("./lib/circle.png", px - self.__cr /
-                         2 + 1, py - self.__cr/2 + 1, self.__cr - 2)
-
-    def __add_pages(self):
-        # generate all pages
-        index = 0
-        page_num = 0
-        cards_total = len(self.__cards)
-        pages_total = math.ceil(cards_total / self.__cardspp)
-        # iterate thgrough all cards
-        while index < cards_total:
-            i = index % self.__cardspp
-            # generate 6 cards per page
-            if i == 0:
-                page_num += 1
-                self.__pdf.add_page()
-                self.__add_markers()
-                print("Generating page %d out of %d." %
-                      (page_num, pages_total))
-            card = self.__cards[index]
-            col = i % self.__colspp
-            row = math.floor(i / self.__colspp)
-            self.__add_card_to_pdf(card, col, row, self.__cr / 3)
-            index += 1
-
     def __add_external_pages(self, path):
         # generate all pages
         index = 0
@@ -131,7 +86,6 @@ class Cards_Creator:
             card = self.__cards[index]
             col = i % self.__colspp
             row = math.floor(i / self.__colspp)
-            #self.__add_card_to_pdf(card, col, row, self.__cr / 3)
             px = col * self.__cw + self.__cw / 2
             py = row * self.__ch + self.__ch / 2
             self.__pdf.image(path + format(index, '02d') + ".png", px -
@@ -191,6 +145,5 @@ class Cards_Creator:
                   (len(self.__cards), self.__cardspp, self.__sn))
             self.__init_PDF()
             self.__add_intro_page(self.__pdf, self.__files)
-            # self.__add_pages()
             self.__add_external_pages(path + "cards/")
             self.__pdf.output(path + file_name + ".pdf")
