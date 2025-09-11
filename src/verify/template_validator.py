@@ -6,12 +6,6 @@ import os
 
 class Template_Validator:
         
-        __base_name = None
-        __input_file_name = None
-        __output_path = None
-        __lists = None
-        __matrix = None
-
         def __init__(self):
              None
 
