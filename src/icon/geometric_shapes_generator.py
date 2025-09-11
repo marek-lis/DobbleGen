@@ -1,7 +1,7 @@
 import math
 from random import randrange
 from PIL import Image, ImageDraw
-from geometry import Circle, Trapeze, Rhombus, Triangle, Square, Pentagon, Hexagon, Septagon, Ntagon
+from icon.geometry import Circle, Trapeze, Rhombus, Triangle, Square, Pentagon, Hexagon, Septagon, Ntagon
 
 
 class Geometric_Shapes_Generator:
