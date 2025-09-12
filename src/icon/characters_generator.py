@@ -39,4 +39,4 @@ class Characters_Generator:
 
             file_name = f"{file_number:02}.png"
             file_number += 1
-            image.save(os.path.join(output_path, file_name))
+            image.save(os.path.join(output_path, file_name), dpi=(600, 600), format='PNG', subsampling=0, quality=100)
