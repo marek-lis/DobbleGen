@@ -23,7 +23,8 @@ letters_and_digits = [
   {'character': 'O', 'color': '#C4867A'},
   {'character': 'Ó', 'color': '#EBFB22'},
   {'character': 'P', 'color': '#3F8299'},
-  {'character': 'R', 'color': '#85CF22'},
+  {'character': 'Q', 'color': '#FF6F4B'},
+  {'character': 'R', 'color': '#225DB4'},
   {'character': 'S', 'color': '#51E3F1'},
   {'character': 'Ś', 'color': '#639557'},
   {'character': 'T', 'color': '#C70AA9'},
@@ -56,20 +57,21 @@ letters_and_digits = [
   {'character': 'o', 'color': '#2DBE60'},
   {'character': 'ó', 'color': '#462443'},
   {'character': 'p', 'color': '#5BBB93'},
+  {'character': 'q', 'color': '#2282DD'},
   {'character': 'r', 'color': '#B94487'},
   {'character': 's', 'color': '#A03FB3'},
   {'character': 'ś', 'color': '#481D8B'},
-  {'character': 't', 'color': '#B0A70A'},
+  {'character': 't', 'color': '#D48471'},
   {'character': 'u', 'color': '#05474B'},
   {'character': 'v', 'color': '#F95B07'},
-  {'character': 'w', 'color': '#D48471'},
-  {'character': 'x', 'color': '#225DB4'},
+  {'character': 'w', 'color': '#85CF22'},
+  {'character': 'x', 'color': '#B0A76A'},
   {'character': 'y', 'color': '#E5813E'},
   {'character': 'z', 'color': '#717C71'},
   {'character': 'ż', 'color': '#B751F6'},
   {'character': 'ź', 'color': '#CB1245'},
   {'character': '0', 'color': '#728B46'},
-  {'character': '1', 'color': '#D98525'},
+  {'character': '1', 'color': '#D01F62'},
   {'character': '2', 'color': '#333E59'},
   {'character': '3', 'color': '#11EAF9'},
   {'character': '4', 'color': '#2282DD'},
@@ -77,16 +79,43 @@ letters_and_digits = [
   {'character': '6', 'color': '#8FDC1D'},
   {'character': '7', 'color': '#E0EDAD'},
   {'character': '8', 'color': '#62C546'},
-  {'character': '9', 'color': '#D01F62'}
+  {'character': '9', 'color': '#D98525'}
 ]
+
+char_color_dict = {item['character']: item['color'] for item in letters_and_digits}
+
+def map_string_to_colors(input_string):
+    result = []
+    for char in input_string:
+        if char in char_color_dict:
+            result.append({'character': char, 'color': char_color_dict[char]})
+        else:
+            result.append({'character': char, 'color': '#FF0000'})
+    return result
+
 
 output_path = 'lib/icons/76_letters_and_digits/'
 # font_path = "lib/fonts/CooperBlackRegular.ttf"
 # font_path = "lib/fonts/TitanOne-Regular.ttf"
 # font_path = "lib/fonts/Digitalt.ttf"
-font_path = "lib/fonts/MontserratBlack-3zOvZ.ttf"
-font_size = 207
-width, height = 256, 256
+# font_path = "lib/fonts/MontserratBlack-3zOvZ.ttf"
+# font_path = "lib/fonts/SpicyRice-Regular.otf"
+font_path = "lib/fonts/BowlbyOneSC-Regular.otf"
+# font_path = "lib/fonts/Baloo-Regular.ttf"
+# font_path = "lib/fonts/TitanOne-Regular.ttf"
 
-letter_pics_generator = Characters_Generator(letters_and_digits, font_path, font_size, width, height)
+input_57_letters_digits = "ABCDEFGHIJKLMNOPRSTUWXYZabcdefghijklmnoprstuwxyz123456789"
+input_57_letters_pl = "AĄBCĆDEĘFGHIJKLŁMNOÓPQRSŚTUWXYZŹŻabcdefghijklmnoprstuwxyz"
+input_43_letters_pl_digits = "AĄBCĆDEĘFGHIJKLŁMNOÓPQRSŚTUWXYZŹŻ1234567890"
+input_31_letters_pl = "AĄBCĆDEĘFGHIJKLŁMNOÓPRSŚTUWXYZŻ"
+
+selected_characters = map_string_to_colors(input_57_letters_digits)
+
+letter_pics_generator = Characters_Generator(
+    characters = selected_characters, 
+    font_path = font_path, 
+    font_size = 190, 
+    width = 256, 
+    height = 256
+  )
 letter_pics_generator.generate_images(output_path)
