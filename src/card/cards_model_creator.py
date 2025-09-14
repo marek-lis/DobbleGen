@@ -91,8 +91,9 @@ class Cards_Model_Creator:
         result = self.__icon_files
         if card_number != None:
             card_model = self.__cards_model[card_number]
-            print(card_model)
-            result = [self.__icon_files[i] for i in card_model]
+            print(f"Card #: {card_number+1:02d}, card model: {card_model}")
+            # tempalte values start from 1, but icon files list index starts from 0, so i-1 is the correct index:
+            result = [self.__icon_files[i-1] for i in card_model]
         return result
     
     def get_output_folder_path(self):
