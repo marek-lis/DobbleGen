@@ -1,4 +1,4 @@
-from disk_scanner import scan_dir_for_files
+from utils.disk_scanner import scan_dir_for_files
 from fpdf import FPDF
 import math
 import os
@@ -133,11 +133,13 @@ class PDF_Generator:
             row = math.floor(i / cols)
             text = file.split(
                 '/')[-1:][0].split('.')[-2:-1][0].replace('_', ' ')
-            print(col, row, text)
+            #print(col, row, text)
             pdf.image(file, page_left + col * 40,
                       page_top + row * 20 - 16, h=12)
             pdf.text(page_left + col * 40, page_top + row * 20, text)
             i += 1
+            if i >= self.__cards_num:
+                break
 
     def __add_external_pages(self, path):
         # generate all pages

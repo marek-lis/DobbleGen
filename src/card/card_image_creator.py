@@ -10,11 +10,11 @@ class Card_Image_Creator:
                  min_scale=0.5,                         # 0.5 = 50% icon's scale
                  max_scale=1.0,                         # 1.0 = 100% icon's scale
                  padding_from_edge=10,                  # 10 = 10 pixels from circle's edge
+                 slice_distance_factor=0.6,             # 0.5 = middle of radius, 0.7 = towards card's edge
                  delta_center=20,                       # 20 = +/-20px random placement of the central icon
                  delta_angle=0.2,                       # 0.2 = +/-20% of angle, 0.02 = +/-2% of angle
                  delta_radius=0.1,                      # 0.1 = +/-10% of radius, 0.01 = +/-1% of radius
-                 slice_distance_factor=0.6,             # 0.5 = middle of radius, 0.7 = towards card's edge
-                 max_attempts=50,                       # 50 = 50 attempts to place a single icon
+                 max_attempts=99,                       # 99 = 99 attempts to place a single icon
             ):
         
         match planner_type:
@@ -25,36 +25,36 @@ class Card_Image_Creator:
                     # base_item_size=256,
                     min_scale=0.5,
                     max_scale=1.0,
-                    padding_from_edge=10,
-                    slice_distance_factor=0.6,
-                    max_attempts=99,
+                    padding_from_edge=padding_from_edge,
+                    slice_distance_factor=slice_distance_factor,
+                    max_attempts=max_attempts,
                 )
 
             case Planner_Type.IDEAL_SLICE:
                 self.planner = Planner_Factory.create(
                     Planner_Type.IDEAL_SLICE,
-                    canvas_size=1024,
-                    base_item_size=256,
-                    min_scale=0.5,
-                    max_scale=1.0,
+                    canvas_size=canvas_size,
+                    base_item_size=base_item_size,
+                    min_scale=min_scale,
+                    max_scale=max_scale,
                     padding_from_edge=10,
                     slice_distance_factor=0.6,
-                    max_attempts=99,
+                    max_attempts=max_attempts,
                 )
 
             case Planner_Type.ADJUSTABLE_SLICE:
                 self.planner = Planner_Factory.create(
                     Planner_Type.ADJUSTABLE_SLICE,
-                    canvas_size=1024,
-                    base_item_size=256,
-                    min_scale=0.5,
-                    max_scale=1.0,
+                    canvas_size=canvas_size,
+                    base_item_size=base_item_size,
+                    min_scale=min_scale,
+                    max_scale=max_scale,
                     padding_from_edge=10,
                     slice_distance_factor=0.6,
                     delta_center=delta_center,
                     delta_angle=delta_angle,
                     delta_radius=delta_radius,
-                    max_attempts=99,
+                    max_attempts=max_attempts,
                 )
         
         self.generator = Card_Image_Generator(canvas_size=canvas_size)
