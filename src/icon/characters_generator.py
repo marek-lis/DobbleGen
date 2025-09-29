@@ -33,8 +33,8 @@ class Characters_Generator:
         left_bottom_y = y + bbox[3] + offset_y
         
         # the dot marker can't go out of the picture!
-        left_bottom_x = max(dot_radius, min(box_width - dot_radius, left_bottom_x))
-        left_bottom_y = max(dot_radius, min(box_height - dot_radius, left_bottom_y))
+        left_bottom_x = max(dot_radius, min(box_width - dot_radius - 1, left_bottom_x))
+        left_bottom_y = max(dot_radius, min(box_height - dot_radius - 1, left_bottom_y))
         
         # copy the fill and stroke details from the character:
         fill_color = kwargs.get('fill', None)

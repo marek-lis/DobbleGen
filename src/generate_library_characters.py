@@ -94,22 +94,8 @@ def map_string_to_colors(input_string):
     return result
 
 
-output_path = 'lib/icons/76_letters_and_digits/'
-# font_path = "lib/fonts/CooperBlackRegular.ttf"
-# font_path = "lib/fonts/TitanOne-Regular.ttf"
-# font_path = "lib/fonts/Digitalt.ttf"
-# font_path = "lib/fonts/MontserratBlack-3zOvZ.ttf"
-# font_path = "lib/fonts/SpicyRice-Regular.otf"
-# font_path = "lib/fonts/BowlbyOneSC-Regular.otf"
-# font_path = "lib/fonts/Baloo-Regular.ttf"
-# font_path = "lib/fonts/TitanOne-Regular.ttf"
-# font_path = "lib/fonts/ArchivoBlack-Regular.ttf"
-# font_path = "lib/fonts/Lato-Black.ttf"
-# font_path = "lib/fonts/PlaywriteITModerna-Regular.ttf"
-# font_path = "lib/fonts/Montserrat-Bold.ttf"
-# font_path = "lib/fonts/Kalam-Bold.ttf"
-font_path = "lib/fonts/Quicksand-Bold.ttf"
-# font_path = "lib/fonts/Montserrat-Black.ttf"
+output_path = 'lib/icons/57_letters_pl/'
+font_path = "lib/fonts/DynaPuff-Bold.ttf"
 
 input_57_letters_digits = "ABCDEFGHIJKLMNOPRSTUWXYZabcdefghijklmnoprstuwxyz123456789"
 input_57_letters_pl_v1 = "AĄBCĆDEĘFGHIJKLŁMNOÓPQRSŚTUWXYZŹŻabcdefghijklmnoprstuwxyz"
@@ -117,7 +103,7 @@ input_57_letters_pl_v2 = "AĄBCĆDEĘFGHIJKLŁMNŃOÓPRSŚTUWYZŹŻaąbcdeęfghi
 input_43_letters_pl_digits = "AĄBCĆDEĘFGHIJKLŁMNOÓPQRSŚTUWXYZŹŻ1234567890"
 input_31_letters_pl = "AĄBCĆDEĘFGHIJKLŁMNOÓPRSŚTUWXYZŻ"
 
-selected_characters = map_string_to_colors(input_57_letters_digits)
+selected_characters = map_string_to_colors(input_57_letters_pl_v2)
 
 letter_pics_generator = Characters_Generator(
     characters = selected_characters, 
