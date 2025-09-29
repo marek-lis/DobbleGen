@@ -116,6 +116,7 @@ class Card_Image_Planner:
 
             if not success:
                 # fallback: reduce scale and insert without collision check
+                print("Failed to place an icon without collision.")
                 scale = max(self.min_scale, scale * 0.7)
                 rotation = random.randint(0, 359)
                 img = self._prepare_image(path, scale, rotation)

@@ -117,6 +117,7 @@ class Card_Image_Planner:
 
             if not placed:
                 # fallback – place icon anyway, we don't want to lose it
+                print("Failed to place an icon without collision.")
                 placements.append(placement)
 
         return placements

@@ -25,7 +25,7 @@ class Characters_Generator:
 
         # draw the dot marker in bottom left corner
         dot_radius = 15 
-        offset_x = text_width * 0.15
+        offset_x = text_width * 0.25
         offset_y = text_height * 0.05
         
         # bottom left corner of the text - offset

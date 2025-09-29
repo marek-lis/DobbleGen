@@ -135,6 +135,7 @@ class Card_Image_Planner:
 
                 if not placed:
                     success = False
+                    print("Failed to place an icon without collision.")
                     break  # if failed, break the loop and start from the beginning
 
             if success:
