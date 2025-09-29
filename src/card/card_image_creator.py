@@ -56,6 +56,33 @@ class Card_Image_Creator:
                     delta_radius=delta_radius,
                     max_attempts=max_attempts,
                 )
+
+            case Planner_Type.ADVANCED_IDEAL_SLICE:
+                self.planner = Planner_Factory.create(
+                    Planner_Type.ADVANCED_IDEAL_SLICE,
+                    canvas_size=canvas_size,
+                    base_item_size=base_item_size,
+                    min_scale=min_scale,
+                    max_scale=max_scale,
+                    padding_from_edge=10,
+                    slice_distance_factor=0.6,
+                    max_attempts=max_attempts,
+                )
+
+            case Planner_Type.ADVANCED_ADJUSTABLE_SLICE:
+                self.planner = Planner_Factory.create(
+                    Planner_Type.ADVANCED_ADJUSTABLE_SLICE,
+                    canvas_size=canvas_size,
+                    base_item_size=base_item_size,
+                    min_scale=min_scale,
+                    max_scale=max_scale,
+                    padding_from_edge=10,
+                    slice_distance_factor=0.6,
+                    delta_center=delta_center,
+                    delta_angle=delta_angle,
+                    delta_radius=delta_radius,
+                    max_attempts=max_attempts,
+                )
         
         self.generator = Card_Image_Generator(canvas_size=canvas_size)
 
