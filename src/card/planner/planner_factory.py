@@ -7,7 +7,7 @@ class Planner_Factory:
         Planner_Type.IDEAL_SLICE: "card.planner.impl.card_image_ideal_slices_planner",
         Planner_Type.ADJUSTABLE_SLICE: "card.planner.impl.card_image_adjustable_slices_planner",
         Planner_Type.ADVANCED_IDEAL_SLICE: "card.planner.impl.card_image_advanced_ideal_slices_planner",
-        Planner_Type.ADVANCED_ADJUSTABLE_SLICE: "card.planner.impl.card_image_adjustable_slices_planner",
+        Planner_Type.ADVANCED_ADJUSTABLE_SLICE: "card.planner.impl.card_image_advanced_adjustable_slices_planner",
     }
 
     CLASS_NAME = "Card_Image_Planner"
