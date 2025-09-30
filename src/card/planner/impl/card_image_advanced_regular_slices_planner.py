@@ -1,17 +1,18 @@
 import math
 import random
-from PIL import Image, ImageChops, ImageOps
+import numpy as np
+from PIL import Image, ImageDraw
 
 class Card_Image_Planner:
     def __init__(self, 
                  canvas_size=1024,          # 1024 = card's size of 1024x1024px
                  base_item_size=256,        # 256 = icon's size of 256x256px
-                 min_scale=0.5,             # 0.5 = 50% icon's scale
-                 max_scale=1.0,             # 1.0 = 100% icon's scale
-                 padding_from_edge=10,      # 10 = 10 pixels from circle's edge
-                 slice_distance_factor=0.6, # 0.5 = middle of radius, 0.7 = towards card's edge
-                 max_attempts=99,          # 99 = 99 attempts to place a single icon
-            ):
+                 min_scale=0.75,            # 0.50 = 50% icon's scale
+                 max_scale=1.00,            # 1.00 = 100% icon's scale
+                 padding_from_edge=15,      # 10 = 10 pixels from circle's edge
+                 slice_distance_factor=0.5, # 0.5 = middle of radius, 0.7 = towards card's edge
+                 max_attempts=99,           # 99 = 99 attempts to place a single icon
+            ):     
         self.canvas_size = canvas_size
         self.base_item_size = base_item_size
         self.radius = canvas_size // 2
@@ -21,9 +22,8 @@ class Card_Image_Planner:
         self.slice_distance_factor = slice_distance_factor
         self.max_attempts = max_attempts
 
-        # create mask 
+        # maska ograniczająca okrąg
         self.circle_mask = Image.new("1", (canvas_size, canvas_size), 0)
-        from PIL import ImageDraw
         draw = ImageDraw.Draw(self.circle_mask)
         draw.ellipse(
             (padding_from_edge, padding_from_edge,
@@ -31,6 +31,7 @@ class Card_Image_Planner:
              canvas_size - padding_from_edge),
             fill=1
         )
+        self.circle_mask_np = np.array(self.circle_mask, dtype=bool)
 
     def _prepare_image(self, path, scale, rotation):
         img = Image.open(path).convert("RGBA")
@@ -39,93 +40,82 @@ class Card_Image_Planner:
         img = img.rotate(rotation, expand=True)
         return img
 
-    def _get_mask(self, img):
-        return img.split()[3].point(lambda p: 1 if p > 0 else 0).convert("1")
+    def _get_mask_np(self, img):
+        return np.array(img.split()[3]) > 0  # alpha > 0
 
-    def _check_collision(self, occupancy_map, mask, x, y):
-        temp = Image.new("1", (self.canvas_size, self.canvas_size), 0)
-        temp.paste(mask, (x, y))
-        overlap = ImageChops.logical_and(temp, occupancy_map)
-        return overlap.getbbox() is not None
+    def _check_collision_np(self, occupancy_map_np, mask_np, x, y):
+        h, w = mask_np.shape
+        if x < 0 or y < 0 or x + w > self.canvas_size or y + h > self.canvas_size:
+            return True  # wykracza poza canvas
+        region = occupancy_map_np[y:y+h, x:x+w]
+        return np.any(region & mask_np)
 
-    def _check_inside_circle(self, mask, x, y):
-        temp = Image.new("1", (self.canvas_size, self.canvas_size), 0)
-        temp.paste(mask, (x, y))
-        outside = ImageChops.logical_and(temp, ImageOps.invert(self.circle_mask))
-        return outside.getbbox() is None
+    def _check_inside_circle_np(self, mask_np, x, y):
+        h, w = mask_np.shape
+        if x < 0 or y < 0 or x + w > self.canvas_size or y + h > self.canvas_size:
+            return False
+        region = self.circle_mask_np[y:y+h, x:x+w]
+        return np.all(region[mask_np])
 
     def plan(self, paths):
-        """
-        returns a list of  dicts: 
-        { 
-            "path", 
-            "x", 
-            "y", 
-            "scale", 
-            "rotation" 
-        }
-        """
         placements = []
-        occupancy_map = Image.new("1", (self.canvas_size, self.canvas_size), 0)
+        occupancy_map_np = np.zeros((self.canvas_size, self.canvas_size), dtype=bool)
 
-        # center icon:
+        # centralna ikona
         scale = random.uniform(self.max_scale * 0.7, self.max_scale)
         rotation = random.randint(0, 359)
         img = self._prepare_image(paths[0], scale, rotation)
-        mask = self._get_mask(img)
-
+        mask_np = self._get_mask_np(img)
         cx = self.radius + random.randint(-20, 20)
         cy = self.radius + random.randint(-20, 20)
         x = cx - img.width // 2
         y = cy - img.height // 2
 
-        occupancy_map.paste(mask, (x, y))
+        occupancy_map_np[y:y+img.height, x:x+img.width] |= mask_np
         placements.append({"path": paths[0], "x": cx, "y": cy, "scale": scale, "rotation": rotation})
 
-        # slice the card for other icons:
+        # slice’owanie karty
         slices = len(paths) - 1
+        if slices == 0:
+            return placements
+
         angle_per_slice = 2 * math.pi / slices
         slice_radius = (self.radius - self.padding_from_edge) * self.slice_distance_factor
-        r = slice_radius
 
         for i, path in enumerate(paths[1:], start=0):
-            success = False
+            placed = False
             for attempt in range(self.max_attempts):
                 scale = random.uniform(self.min_scale, self.max_scale)
                 rotation = random.randint(0, 359)
                 img = self._prepare_image(path, scale, rotation)
-                mask = self._get_mask(img)
+                mask_np = self._get_mask_np(img)
 
                 angle_center = i * angle_per_slice + angle_per_slice / 2
-
-                cx = int(self.radius + r * math.cos(angle_center))
-                cy = int(self.radius + r * math.sin(angle_center))
-
+                cx = int(self.radius + slice_radius * math.cos(angle_center))
+                cy = int(self.radius + slice_radius * math.sin(angle_center))
                 x = cx - img.width // 2
                 y = cy - img.height // 2
 
-                if not self._check_inside_circle(mask, x, y):
+                if not self._check_inside_circle_np(mask_np, x, y):
                     continue
-                if self._check_collision(occupancy_map, mask, x, y):
+                if self._check_collision_np(occupancy_map_np, mask_np, x, y):
                     continue
 
-                occupancy_map.paste(mask, (x, y))
+                occupancy_map_np[y:y+img.height, x:x+img.width] |= mask_np
                 placements.append({"path": path, "x": cx, "y": cy, "scale": scale, "rotation": rotation})
-                success = True
+                placed = True
                 break
 
-            if not success:
-                # fallback: reduce scale and insert without collision check
+            if not placed:
+                # fallback: zmniejsz skalę i dodaj bez sprawdzania kolizji
                 print("Failed to place an icon without collision.")
                 scale = max(self.min_scale, scale * 0.7)
                 rotation = random.randint(0, 359)
                 img = self._prepare_image(path, scale, rotation)
-                mask = self._get_mask(img)
-                cx = int(self.radius + r * math.cos(angle_center))
-                cy = int(self.radius + r * math.sin(angle_center))
+                mask_np = self._get_mask_np(img)
                 x = cx - img.width // 2
                 y = cy - img.height // 2
-                occupancy_map.paste(mask, (x, y))
+                occupancy_map_np[y:y+img.height, x:x+img.width] |= mask_np
                 placements.append({"path": path, "x": cx, "y": cy, "scale": scale, "rotation": rotation})
 
         return placements

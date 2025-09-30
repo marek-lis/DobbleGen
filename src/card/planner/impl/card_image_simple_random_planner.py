@@ -5,10 +5,10 @@ from PIL import Image
 class Card_Image_Planner:
     def __init__(self, 
                  canvas_size=1024,          # 1024 = card's size of 1024x1024px
-                 min_scale=0.5,             # 0.5 = 50% icon's scale
-                 max_scale=1.0,             # 1.0 = 100% icon's scale
+                 min_scale=0.50,            # 0.50 = 50% icon's scale
+                 max_scale=1.00,            # 1.00 = 100% icon's scale
                  padding_from_edge=30,      # 30 = 30 pixels from circle's edge
-                 slice_distance_factor=0.6, # 0.5 = middle of radius, 0.7 = towards card's edge
+                 slice_distance_factor=0.5, # 0.5 = middle of radius, 0.7 = towards card's edge
                  max_attempts=99,           # 99 = 99 attempts to place a single icon
             ):
         self.canvas_size = canvas_size

@@ -6,10 +6,10 @@ class Card_Image_Planner:
     def __init__(self, 
                  canvas_size=1024,          # 1024 = card's size of 1024x1024px
                  base_item_size=256,        # 256 = icon's size of 256x256px
-                 min_scale=0.5,             # 0.5 = 50% icon's scale
-                 max_scale=1.0,             # 1.0 = 100% icon's scale
+                 min_scale=0.75,            # 0.50 = 50% icon's scale
+                 max_scale=1.00,            # 1.00 = 100% icon's scale
                  padding_from_edge=10,      # 10 = 10 pixels from circle's edge
-                 slice_distance_factor=0.6, # 0.5 = middle of radius, 0.7 = towards card's edge
+                 slice_distance_factor=0.5, # 0.5 = middle of radius, 0.7 = towards card's edge
                  delta_center=20,           # 20 = +/-20px random placement of the central icon
                  delta_angle=0.2,           # 0.2 = +/-20% of angle, 0.02 = +/-2% of angle
                  delta_radius=0.1,          # 0.1 = +/-10% of radius, 0.01 = +/-1% of radius

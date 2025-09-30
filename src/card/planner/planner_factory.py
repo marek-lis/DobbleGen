@@ -2,12 +2,14 @@ import importlib
 from card.planner.planner_type import Planner_Type
 
 class Planner_Factory:
+    PACKAGE = "card.planner.impl."
     MODULE_MAP = {
-        Planner_Type.RANDOM: "card.planner.impl.card_image_random_planner",
-        Planner_Type.IDEAL_SLICE: "card.planner.impl.card_image_ideal_slices_planner",
-        Planner_Type.ADJUSTABLE_SLICE: "card.planner.impl.card_image_adjustable_slices_planner",
-        Planner_Type.ADVANCED_IDEAL_SLICE: "card.planner.impl.card_image_advanced_ideal_slices_planner",
-        Planner_Type.ADVANCED_ADJUSTABLE_SLICE: "card.planner.impl.card_image_advanced_adjustable_slices_planner",
+        Planner_Type.SIMPLE_RANDOM: f"{PACKAGE}card_image_simple_random_planner",
+        Planner_Type.SIMPLE_REGULAR_SLICES: f"{PACKAGE}card_image_simple_regular_slices_planner",
+        Planner_Type.SIMPLE_ADJUSTABLE_SLICES: f"{PACKAGE}card_image_simple_adjustable_slices_planner",
+        Planner_Type.ADVANCED_REGULAR_SLICES: f"{PACKAGE}card_image_advanced_regular_slices_planner",
+        Planner_Type.ADVANCED_ADJUSTABLE_SLICES: f"{PACKAGE}card_image_advanced_adjustable_slices_planner",
+        Planner_Type.ADVANCED_SNAPSHOT_BASED_ADJUSTABLE_SLICES: f"{PACKAGE}card_image_advanced_snapshot_based_adjustable_slices_planner",
     }
 
     CLASS_NAME = "Card_Image_Planner"
