@@ -81,7 +81,12 @@ letters_and_digits = [
   {'character': '6', 'color': '#8FDC1D'},
   {'character': '7', 'color': '#E0EDAD'},
   {'character': '8', 'color': '#62C546'},
-  {'character': '9', 'color': '#D98525'}
+  {'character': '9', 'color': '#D98525'},
+  {'character': '+', 'color': '#A98525'},
+  {'character': '-', 'color': '#E98525'},
+  {'character': '*', 'color': '#F98525'},
+  {'character': '?', 'color': '#C98525'},
+  {'character': '!', 'color': '#B98525'},
 ]
 
 char_color_dict = {item['character']: item['color'] for item in letters_and_digits}
