@@ -18,8 +18,7 @@ class Card_Image_Creator:
                  max_attempts=99,                                   # 99 = 99 attempts to place a single icon
             ):
         
-        match planner_type:
-            case Planner_Type.SIMPLE_RANDOM:
+        if planner_type == Planner_Type.SIMPLE_RANDOM: 
                 self.planner = Planner_Factory.create(
                     Planner_Type.SIMPLE_RANDOM,
                     canvas_size=canvas_size,
@@ -31,7 +30,7 @@ class Card_Image_Creator:
                     max_attempts=max_attempts,
                 )
 
-            case Planner_Type.SIMPLE_REGULAR_SLICES:
+        elif planner_type == Planner_Type.SIMPLE_REGULAR_SLICES:
                 self.planner = Planner_Factory.create(
                     Planner_Type.SIMPLE_REGULAR_SLICES,
                     canvas_size=canvas_size,
@@ -43,7 +42,7 @@ class Card_Image_Creator:
                     max_attempts=max_attempts,
                 )
 
-            case Planner_Type.SIMPLE_ADJUSTABLE_SLICES:
+        elif planner_type == Planner_Type.SIMPLE_ADJUSTABLE_SLICES:
                 self.planner = Planner_Factory.create(
                     Planner_Type.SIMPLE_ADJUSTABLE_SLICES,
                     canvas_size=canvas_size,
@@ -58,7 +57,7 @@ class Card_Image_Creator:
                     max_attempts=max_attempts,
                 )
 
-            case Planner_Type.ADVANCED_REGULAR_SLICES:
+        elif planner_type == Planner_Type.ADVANCED_REGULAR_SLICES:
                 self.planner = Planner_Factory.create(
                     Planner_Type.ADVANCED_REGULAR_SLICES,
                     canvas_size=canvas_size,
@@ -70,7 +69,7 @@ class Card_Image_Creator:
                     max_attempts=max_attempts,
                 )
 
-            case Planner_Type.ADVANCED_ADJUSTABLE_SLICES:
+        elif planner_type == Planner_Type.ADVANCED_ADJUSTABLE_SLICES:
                 self.planner = Planner_Factory.create(
                     Planner_Type.ADVANCED_ADJUSTABLE_SLICES,
                     canvas_size=canvas_size,
@@ -86,7 +85,7 @@ class Card_Image_Creator:
                     max_attempts=max_attempts,
                 )
 
-            case Planner_Type.ADVANCED_SNAPSHOT_BASED_ADJUSTABLE_SLICES:
+        elif planner_type == Planner_Type.ADVANCED_SNAPSHOT_BASED_ADJUSTABLE_SLICES:
                 self.planner = Planner_Factory.create(
                     Planner_Type.ADVANCED_SNAPSHOT_BASED_ADJUSTABLE_SLICES,
                     canvas_size=canvas_size,
