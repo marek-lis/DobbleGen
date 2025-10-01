@@ -1,4 +1,4 @@
-from icon.characters_generator import Characters_Generator
+from icon.characters.advanced_characters_generator import Characters_Generator
 import os
 
 letters_and_digits = [
@@ -102,8 +102,8 @@ def map_string_to_colors(input_string):
 
 
 output_path = 'lib/icons/57_letters_pl/'
-font_path = "lib/fonts/Ranchers.ttf"
-
+font_path = "lib/fonts/CherryBombOne.ttf"
+# 
 input_57_letters_digits = "ABCDEFGHIJKLMNOPRSTUWXYZabcdefghijklmnoprstuwxyz123456789"
 input_57_letters_pl_v1 = "AĄBCĆDEĘFGHIJKLŁMNOÓPQRSŚTUWXYZŹŻabcdefghijklmnoprstuwxyz"
 input_57_letters_pl_v2 = "AĄBCĆDEĘFGHIJKLŁMNŃOÓPRSŚTUWYZŹŻaąbcdeęfghijklłmnńprstuwy"
@@ -113,10 +113,19 @@ input_31_letters_pl = "AĄBCĆDEĘFGHIJKLŁMNOÓPRSŚTUWXYZŻ"
 selected_characters = map_string_to_colors(input_57_letters_pl_v2)
 
 letter_pics_generator = Characters_Generator(
-    characters = selected_characters, 
-    font_path = font_path, 
-    font_size = 235, 
-    width = 256, 
-    height = 256
+    characters=selected_characters,
+    font_path=font_path,
+    max_font_size=350,  # maksymalny rozmiar fontu do skalowania
+    width=256,
+    height=256,
+    background_color=(255,255,255,0)
   )
+
+# letter_pics_generator = Characters_Generator(
+#     characters=selected_characters,
+#     font_path=font_path,
+#     font_size=256,
+#     width=256,
+#     height=256,
+#   )
 letter_pics_generator.generate_images(output_path)
